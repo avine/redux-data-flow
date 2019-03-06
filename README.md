@@ -1,4 +1,4 @@
-# The Redux pattern
+# redux-data-flow
 
 A visual overview of the Redux unidirectional data flow without and with middleware
 
