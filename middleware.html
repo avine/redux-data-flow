@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Redux middleware</title>
+
+  <link href="node_modules/prismjs/themes/prism.css" rel="stylesheet">
+  <script src="node_modules/prismjs/prism.js"></script>
+  
+  <script src="node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js"></script>
+  <link href="node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css" rel="stylesheet">
+
+  <script src="node_modules/prismjs/plugins/line-highlight/prism-line-highlight.js"></script>
+  <link href="node_modules/prismjs/plugins/line-highlight/prism-line-highlight.css" rel="stylesheet">
+
+  <link href="css/index.css" rel="stylesheet">
+  <link href="css/map.css" rel="stylesheet">
+</head>
+<body id="layout">
+
+<img src="img/redux.svg" id="logo">
+<a href="index.html" id="nav">&xlarr; Basics</a>
+
+<div class="layout-box">
+  <h1>Redux middleware</h1>
+
+  <button onclick="increment()">increment</button>
+
+  <p>view: <span id="view">0</span></p>
+
+  <div class="map-container">
+    <a href="#source.3,6" class="map-o map-view">View</a>
+    <a href="#source.9-13" class="map-o map-action">Action</a>
+    <a href="#source.4,7,15-21" class="map-o map-middleware">Middleware</a>
+    <a href="#source.23-28" class="map-o map-reducer">Reducer</a>
+    <a href="#source.30-32" class="map-o map-store">Store</a>
+
+    <div class="map-o map-a map-action-reducer">&longrightarrow;</div>
+    <div class="map-o map-a map-reducer-store">&longrightarrow;</div>
+    <div class="map-o map-a map-store-view">&ldsh;</div>
+    <div class="map-o map-a map-view-action">&ldsh;</div>
+    <div class="map-o map-a map-action-middleware">&udarr;</div>
+  </div>
+  <script>
+    document.querySelector('.map-container').addEventListener('click', () => document.location.hash = '');
+  </script>  
+</div>
+
+<script id="app">
+let state = 0;
+
+const INCREMENT = 'INCREMENT';
+const INCREMENT_SUCCESS = 'INCREMENT_SUCCESS';
+
+const increment = () => dispatch({ type: INCREMENT });
+const incrementSuccess = (payload) => dispatch({ type: INCREMENT_SUCCESS, payload });
+
+function dispatch(action) {
+  state = reducer(state, action);
+  middleware(action);
+  render();
+}
+
+function middleware(action) {
+  switch (action.type) {
+    case INCREMENT:
+      setTimeout(() => incrementSuccess(5), 1000);
+      break;
+  }
+}
+
+function reducer(currState, action) {
+  switch (action.type) {
+    case INCREMENT_SUCCESS: return currState + action.payload;
+    default: return currState;
+  }
+}
+
+function render() {
+  document.getElementById('view').textContent = state;
+}
+</script>
+
+<script>
+const appCode = document.getElementById('app').innerText.trim();
+document.write(`<pre id="source" class="layout-box line-numbers"><code class="language-js">${appCode}</code></pre>`);
+</script>
+
+</body>
+</html>
